@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CampusOS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <button id="menuBtn" class="icon-btn" aria-label="Show or hide menu">&#9776;</button>
+    <div class="brand">Campus<span>OS</span></div>
+    <input class="search" id="globalSearch" type="search" placeholder="Search CampusOS">
+    <div class="profile-wrap">
+      <button id="profileBtn" class="avatar-btn" aria-label="Profile menu">S<span class="online"></span></button>
+      <div id="profileMenu" class="menu hidden">
+        <button data-action="profile"><span class="ico">&#128100;</span><div>View Profile<small id="menuUser">u/student</small></div></button>
+        <button data-action="soon"><span class="ico">&#128085;</span><div>Edit Avatar</div></button>
+        <button data-action="soon"><span class="ico">&#128221;</span><div>Drafts</div></button>
+        <button data-action="soon"><span class="ico">&#127942;</span><div>Achievements<small><span id="achCount">0</span> unlocked</small></div></button>
+        <button data-action="theme"><span class="ico">&#127763;</span><div>Display Mode<small id="themeLabel">Dark</small></div></button>
+        <button data-action="soon"><span class="ico">&#128682;</span><div>Log Out</div></button>
+        <hr>
+        <button data-action="soon"><span class="ico">&#9881;</span><div>Settings</div></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app">
+  <aside class="sidebar" id="sidebar">
+    <nav>
+      <button class="tab active" data-tab="skills"><span class="ico">&#128200;</span>Skills</button>
+      <button class="tab" data-tab="ai"><span class="ico">&#10024;</span>AI Assistant</button>
+      <button class="tab" data-tab="community"><span class="ico">&#127979;</span>Community</button>
+    </nav>
+  </aside>
+  <div class="content">
+
+  <main>
+
+    <!-- ========== TAB 1: SKILLS (Person 1 -> skills.js) ========== -->
+    <section id="skills" class="panel active">
+      <div class="stats">
+        <div class="stat"><span class="label">Total points</span><strong id="statPoints">0</strong></div>
+        <div class="stat"><span class="label">Rank</span><strong id="statRank">Bronze</strong></div>
+        <div class="stat"><span class="label">Streak</span><strong id="statStreak">0 days</strong></div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2>Log today's progress</h2>
+          <form id="skillForm">
+            <label>Skill
+              <select id="skillName">
+                <option>DSA</option><option>Python</option><option>Web Dev</option>
+                <option>DBMS</option><option>Aptitude</option>
+              </select>
+            </label>
+            <label>What did you do?
+              <input type="text" id="skillNote" placeholder="e.g. Solved 5 array problems" required>
+            </label>
+            <label>Problems / minutes
+              <input type="number" id="skillAmount" min="1" value="1" required>
+            </label>
+            <label>Proof link (optional)
+              <input type="url" id="skillProof" placeholder="GitHub repo, certificate or LeetCode link">
+            </label>
+            <button type="submit" class="btn">Add log</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Leaderboard</h2>
+          <ol id="leaderboard" class="plain-list"></ol>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="heat-title"><strong id="heatTotal">0</strong> logs in <span id="heatYear"></span></div>
+        <div class="heat-sub">Total active days: <b id="heatDays">0</b> &nbsp;&nbsp; All-time max streak: <b id="heatMax">0</b></div>
+        <div class="heat-layout">
+          <div class="heat-scroll" id="heatScroll"><div id="calGrid" class="heat-grid"></div></div>
+          <div id="yearList" class="year-list"></div>
+        </div>
+        <p class="hint" id="calDayTitle" style="margin-top:12px"></p>
+        <ul id="calDayList" class="plain-list"></ul>
+      </div>
+
+      <div class="card">
+        <h2>Recent activity</h2>
+        <ul id="skillLogList" class="plain-list"></ul>
+      </div>
+    </section>
+
+    <!-- ========== TAB 2: AI ASSISTANT (Person 1 -> ai.js) ========== -->
+    <section id="ai" class="panel">
+      <div class="card">
+        <h2>Tell CampusOS what's going on</h2>
+        <p class="hint">Type normal sentences. Example: "My DBMS assignment is due Monday."</p>
+        <textarea id="aiInput" rows="4" placeholder="My DBMS assignment is due Monday. I want to learn Python. I completed Python loops."></textarea>
+        <div class="row">
+          <button id="aiSubmit" class="btn">Categorize</button>
+          <button id="aiToday" class="btn btn-alt">What should I do today?</button>
+          <button id="aiClear" class="btn btn-ghost">Clear all</button>
+        </div>
+      </div>
+
+      <div id="aiSuggestion" class="card hidden"></div>
+      <div id="aiCards" class="cards"></div>
+    </section>
+
+    <!-- ========== TAB 3: COMMUNITY (Person 2 -> community.js) ========== -->
+    <section id="community" class="panel">
+      <div class="banner"></div>
+      <div class="c-head">
+        <div class="c-avatar">c/</div>
+        <h1 id="communityName">c/NIET-Greater-Noida</h1>
+        <div class="c-actions">
+          <button class="btn-outline" id="createPostBtn">+ Create Post</button>
+          <button class="btn-outline" id="joinBtn">Joined</button>
+        </div>
+      </div>
+
+      <div class="c-layout">
+        <div class="c-main">
+          <div class="card hidden" id="createPostBox">
+            <h2>Create post</h2>
+            <form id="uploadForm">
+              <label>Title <input type="text" id="upTitle" placeholder="e.g. DBMS Unit 3 notes" required></label>
+              <label>Subject <input type="text" id="upSubject" placeholder="e.g. DBMS" required></label>
+              <div class="grid">
+                <label>Semester
+                  <select id="upSem"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+                </label>
+                <label>Type
+                  <select id="upType"><option>Notes</option><option>PYQ</option><option>Assignment</option></select>
+                </label>
+              </div>
+              <label>File <input type="file" id="upFile"></label>
+              <button type="submit" class="btn">Post</button>
+            </form>
+          </div>
+
+          <div class="sortbar">
+            <select id="sortSelect"><option>Best</option><option>New</option><option>Top</option></select>
+            <input type="text" id="filterSubject" placeholder="Subject">
+            <select id="filterSem"><option value="">All sems</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+            <select id="filterType"><option value="">All types</option><option>Notes</option><option>PYQ</option><option>Assignment</option></select>
+          </div>
+
+          <!-- Sample posts. community.js will replace everything inside #uploadList -->
+          <div id="uploadList" class="feed">
+            <article class="post">
+              <div class="votes"><button>&#9650;</button><b>24</b><button>&#9660;</button></div>
+              <div class="post-body"><span class="flair">Notes</span>
+                <h3>DBMS Unit 3: Normalization (handwritten notes)</h3>
+                <div class="meta">u/rahul &bull; Sem 4 &bull; DBMS &bull; 2 hr ago</div>
+                <div class="post-actions"><button>&#128172; 6 comments</button><button>&#9873; Report</button></div></div>
+            </article>
+            <article class="post">
+              <div class="votes"><button>&#9650;</button><b>41</b><button>&#9660;</button></div>
+              <div class="post-body"><span class="flair">PYQ</span>
+                <h3>Operating Systems end-sem paper (previous year)</h3>
+                <div class="meta">u/neha &bull; Sem 5 &bull; OS &bull; 1 day ago</div>
+                <div class="post-actions"><button>&#128172; 12 comments</button><button>&#9873; Report</button></div></div>
+            </article>
+            <article class="post">
+              <div class="votes"><button>&#9650;</button><b>9</b><button>&#9660;</button></div>
+              <div class="post-body"><span class="flair">Assignment</span>
+                <h3>Python Assignment 2: reference solution</h3>
+                <div class="meta">u/aman &bull; Sem 3 &bull; Python &bull; 3 days ago</div>
+                <div class="post-actions"><button>&#128172; 2 comments</button><button>&#9873; Report</button></div></div>
+            </article>
+          </div>
+        </div>
+
+        <aside class="c-side">
+          <div class="card">
+            <h2>About</h2>
+            <p class="hint">Share notes, assignments and previous year papers with students of your college.</p>
+            <label>Your college
+              <select id="collegeSelect"><option>NIET Greater Noida</option><option>Other college</option></select>
+            </label>
+            <div class="mini-stats"><div><strong id="memberCount">1.2K</strong><span>Members</span></div><div><strong id="postCount">3</strong><span>Posts</span></div></div>
+          </div>
+          <div class="card">
+            <h2>Community rules</h2>
+            <ol class="rules"><li>Study material only</li><li>No exam leaks during live exams</li><li>Credit the original author</li><li>No spam</li></ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========== PROFILE (opened from the profile menu) ========== -->
+    <section id="profile" class="panel">
+      <div class="card">
+        <div class="prof-head"><div class="avatar-btn big">S</div>
+          <div><h2 id="profName">u/student</h2><p class="hint">NIET Greater Noida</p></div></div>
+        <div class="mini-stats"><div><strong id="profPoints">0</strong><span>Points</span></div><div><strong id="profRank">Bronze</strong><span>Rank</span></div><div><strong id="profStreak">0 days</strong><span>Streak</span></div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>CampusOS prototype &middot; data is stored in your browser only</footer>
+  </div>
+  </div>
+
+  <!-- Shared UI script (tabs, sidebar, profile menu, theme). Tell each other before editing. -->
+  <script>
+    var $ = function (s) { return document.querySelector(s); };
+    function openTab(name) {
+      document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('active', b.dataset.tab === name); });
+      document.querySelectorAll('.panel').forEach(function (p) { p.classList.toggle('active', p.id === name); });
+      location.hash = name;
+      if (window.innerWidth < 800) document.body.classList.add('sidebar-hidden');
+    }
+    document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { openTab(b.dataset.tab); }); });
+    var start = location.hash.replace('#', '');
+    if (start && document.getElementById(start)) openTab(start);
+
+    // show / hide left sidebar
+    if (window.innerWidth < 800) document.body.classList.add('sidebar-hidden');
+    $('#menuBtn').addEventListener('click', function () { document.body.classList.toggle('sidebar-hidden'); });
+
+    // toast
+    function toast(msg) {
+      var t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+      document.body.appendChild(t); setTimeout(function () { t.remove(); }, 1800);
+    }
+
+    // theme (dark by default)
+    function setTheme(t) {
+      document.documentElement.dataset.theme = t;
+      $('#themeLabel').textContent = t === 'dark' ? 'Dark' : 'Light';
+      try { localStorage.setItem('campusos-theme', t); } catch (e) {}
+    }
+    var saved = 'dark'; try { saved = localStorage.getItem('campusos-theme') || 'dark'; } catch (e) {}
+    setTheme(saved);
+
+    // profile dropdown
+    $('#profileBtn').addEventListener('click', function (e) { e.stopPropagation(); $('#profileMenu').classList.toggle('hidden'); });
+    document.addEventListener('click', function () { $('#profileMenu').classList.add('hidden'); });
+    document.querySelectorAll('#profileMenu button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var a = b.dataset.action;
+        if (a === 'profile') openTab('profile');
+        else if (a === 'theme') setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+        else toast('Coming soon');
+      });
+    });
+
+    // community: create post box and join button
+    $('#createPostBtn').addEventListener('click', function () { $('#createPostBox').classList.toggle('hidden'); });
+    $('#joinBtn').addEventListener('click', function () { this.textContent = this.textContent === 'Joined' ? 'Join' : 'Joined'; });
+  </script>
+
+  <script src="skills.js"></script>
+  <script src="ai.js"></script>
+  <script src="community.js"></script>
+</body>
+</html>
